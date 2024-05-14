@@ -1,0 +1,78 @@
+#include<iostream>
+
+#include<gl/glew.h>
+#include<GL/glut.h>
+
+float rotate_angle = 0.f;
+void changeSize(int w, int h){
+	if (h==0) h=1;
+	float ratio = 1.0*w/h;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdntity();
+	glViewport(0,0,w,h);
+	glOrtho(-1.f,1.f,-1.f,1.f,-1.f,1.f);
+	glMatrixMode(GL_MODELVIEW);
+}
+void display(){
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
+		glPusthMatrix();
+		glRotatef(rotate_angle, 0.f, 1.f, 0.f);
+		glutSolidTeapot(0.5);
+		glPopMatrix();
+		glFlush();
+		glutSwapBuffers();
+		rotate_angle = rotate_angle +0.1f;
+		if (rotate_angle>360.f) rotate_angle -=360.f;
+}
+void initGLEW()
+{
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+		fprintf(stderr, "Error: %s\n",glewGetErrorString(err));
+		exit(0);
+	}
+	fprintf(student,"Status:Using GLEW %s\n",glewGetStirng(GLEW_VERSION));
+	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+		printf("Ready for OpenGL 4.6\n");
+	else {
+		printf("OpenGL 4.6 not supported\n");
+		exit(0);
+	}
+}
+void initGL()
+{
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTO);
+	glEnable(GL_DEPTH_TEST);
+	
+	glClearColor(0.0f,0.0f,0.0f,1.0f);
+	glFrontFace(GL_CCW);
+	glColor3f(0.0f,0.5f,1.0f);
+	
+	GLfloat lightPos[] = {0.1f,0.f,10.f,0.f};
+	glLightfv(GL_LIGHTO, GL_POSITION, lightPos);
+	glEnable(GL_COLOR_MATERIAL);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-1.f,1.f,-1.f,1.f,-1.f,1.f);
+	glMatrixMode(GL_MODELVIEW);
+}
+int main(int argc, char** argv)
+{
+	glutInit(&argc,argv);
+		glutInitWindowPosition(100,100);
+		glutInitWindowSize(300,300);
+		glutCreateWindow("OpenGL");
+		glutInitDisplayMode(GLUT_PGBA | GLUT_DOUBLE | GLUT_DEPTH);
+		glutDisplayFunc(display);
+		glutReshapeFunc(changeSize);
+		glutIdleFunc(display);
+		
+		initGLEW();
+		initGL();
+	glutMainLoop();
+	return 0;
+}
