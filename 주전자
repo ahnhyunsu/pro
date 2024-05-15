@@ -1,49 +1,38 @@
-#include<glut.h>
-#include<gl/GLU.h>
-#include<gl/GL.h>
+#include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
 
- 
-
-void myDisplay();
-
- 
-
-int main(int ac, char** av) {
-
- 
-
-    glutInit(&ac, av);                                   //초기화
-    glutInitDisplayMode(GLUT_RGB);            //RGB칼라 디스플레이모드
-    glutCreateWindow("주전자");              //윈도우 생성
-    glutDisplayFunc(myDisplay);                  //콜백함수 연결
-    glutMainLoop();                                   //이벤트 대기 루프 돌입
-}
-void myDisplay() {
-    glClearColor(1,1,1,1);                            //앞에 세 변수가 RGB입니다. 여기서는 빛의 삼원 색을 다 더한 흰색!
-    glClear(GL_COLOR_BUFFER_BIT);         //화면의 RGB를  배경색으로 다 바꿔!
-
-    glColor3f(0,0,0);                                   //사물의 색을 결정, 앞의 세 변수가 RGB이죠! 여기선 아무 색도 없어서 검은색!
-    glutWireTeapot(0.5);                             //주전자 그리는 함수! 변수는 크기입니다.
-
-    glFlush();                                           //그림 다 그렸다!
-}
-int main(int ac, char** av) {
-
-    //생략
-}
-
+float angle = 0.0f; // 회전 각도
 
 void myDisplay() {
-    glClearColor(1,1,1,1);                           
-    glClear(GL_COLOR_BUFFER_BIT);        
+    glClearColor(1, 1, 1, 1);              // 배경 색상을 흰색으로 설정
+    glClear(GL_COLOR_BUFFER_BIT);          // 화면을 배경 색상으로 지우기
 
-   
+    glColor3f(0, 0, 0);                    // 주전자 색상을 검은색으로 설정
 
-    glColor3f(0,0,0);            
+    glPushMatrix();                        // 현재 변환 행렬을 저장
+    glRotatef(angle, 0, 0, 1);             // Z축을 기준으로 회전
+    glutWireTeapot(0.5);                   // 주전자 그리기
+    glPopMatrix();                         // 이전 변환 행렬 복원
 
-    glRotatef(45, 0, 0, 1);      //오른손 법칙을 따라, z축으로 45도 회전합니다.                             
+    glFlush();                             // 화면에 그리기 명령을 실행
+}
 
-    glutWireTeapot(0.5);        
+void update(int value) {
+    angle += 1.0f;                         // 회전 각도를 증가시킴
+    if (angle > 360) {
+        angle -= 360;
+    }
+    glutPostRedisplay();                   // 디스플레이 콜백을 다시 호출
+    glutTimerFunc(16, update, 0);          // 16밀리초 후에 다시 업데이트 (약 60FPS)
+}
 
-    glFlush();                                          
+int main(int ac, char** av) {
+    glutInit(&ac, av);                     // 초기화
+    glutInitDisplayMode(GLUT_RGB);         // RGB 컬러 디스플레이 모드
+    glutCreateWindow("주전자");            // 윈도우 생성
+    glutDisplayFunc(myDisplay);            // 디스플레이 콜백 함수 연결
+    glutTimerFunc(0, update, 0);           // 타이머 함수 설정
+    glutMainLoop();                        // 이벤트 대기 루프 시작
+    return 0;
 }
