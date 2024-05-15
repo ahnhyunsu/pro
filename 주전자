@@ -1,78 +1,29 @@
-#include<iostream>
+#include<glut.h>
+#include<gl/GLU.h>
+#include<gl/GL.h>
 
-#include<gl/glew.h>
-#include<GL/glut.h>
+ 
 
-float rotate_angle = 0.f;
-void changeSize(int w, int h){
-	if (h==0) h=1;
-	float ratio = 1.0*w/h;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdntity();
-	glViewport(0,0,w,h);
-	glOrtho(-1.f,1.f,-1.f,1.f,-1.f,1.f);
-	glMatrixMode(GL_MODELVIEW);
+void myDisplay();
+
+ 
+
+int main(int ac, char** av) {
+
+ 
+
+    glutInit(&ac, av);                                   //초기화
+    glutInitDisplayMode(GLUT_RGB);            //RGB칼라 디스플레이모드
+    glutCreateWindow("주전자");              //윈도우 생성
+    glutDisplayFunc(myDisplay);                  //콜백함수 연결
+    glutMainLoop();                                   //이벤트 대기 루프 돌입
 }
-void display(){
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	
-		glPusthMatrix();
-		glRotatef(rotate_angle, 0.f, 1.f, 0.f);
-		glutSolidTeapot(0.5);
-		glPopMatrix();
-		glFlush();
-		glutSwapBuffers();
-		rotate_angle = rotate_angle +0.1f;
-		if (rotate_angle>360.f) rotate_angle -=360.f;
-}
-void initGLEW()
-{
-	GLenum err = glewInit();
-	if (GLEW_OK != err)
-	{
-		fprintf(stderr, "Error: %s\n",glewGetErrorString(err));
-		exit(0);
-	}
-	fprintf(student,"Status:Using GLEW %s\n",glewGetStirng(GLEW_VERSION));
-	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-		printf("Ready for OpenGL 4.6\n");
-	else {
-		printf("OpenGL 4.6 not supported\n");
-		exit(0);
-	}
-}
-void initGL()
-{
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHTO);
-	glEnable(GL_DEPTH_TEST);
-	
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
-	glFrontFace(GL_CCW);
-	glColor3f(0.0f,0.5f,1.0f);
-	
-	GLfloat lightPos[] = {0.1f,0.f,10.f,0.f};
-	glLightfv(GL_LIGHTO, GL_POSITION, lightPos);
-	glEnable(GL_COLOR_MATERIAL);
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-1.f,1.f,-1.f,1.f,-1.f,1.f);
-	glMatrixMode(GL_MODELVIEW);
-}
-int main(int argc, char** argv)
-{
-	glutInit(&argc,argv);
-		glutInitWindowPosition(100,100);
-		glutInitWindowSize(300,300);
-		glutCreateWindow("OpenGL");
-		glutInitDisplayMode(GLUT_PGBA | GLUT_DOUBLE | GLUT_DEPTH);
-		glutDisplayFunc(display);
-		glutReshapeFunc(changeSize);
-		glutIdleFunc(display);
-		
-		initGLEW();
-		initGL();
-	glutMainLoop();
-	return 0;
+void myDisplay() {
+    glClearColor(1,1,1,1);                            //앞에 세 변수가 RGB입니다. 여기서는 빛의 삼원 색을 다 더한 흰색!
+    glClear(GL_COLOR_BUFFER_BIT);         //화면의 RGB를  배경색으로 다 바꿔!
+
+    glColor3f(0,0,0);                                   //사물의 색을 결정, 앞의 세 변수가 RGB이죠! 여기선 아무 색도 없어서 검은색!
+    glutWireTeapot(0.5);                             //주전자 그리는 함수! 변수는 크기입니다.
+
+    glFlush();                                           //그림 다 그렸다!
 }
