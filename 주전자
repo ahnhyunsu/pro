@@ -27,3 +27,23 @@ void myDisplay() {
 
     glFlush();                                           //그림 다 그렸다!
 }
+int main(int ac, char** av) {
+
+    //생략
+}
+
+
+void myDisplay() {
+    glClearColor(1,1,1,1);                           
+    glClear(GL_COLOR_BUFFER_BIT);        
+
+   
+
+    glColor3f(0,0,0);            
+
+    glRotatef(45, 0, 0, 1);      //오른손 법칙을 따라, z축으로 45도 회전합니다.                             
+
+    glutWireTeapot(0.5);        
+
+    glFlush();                                          
+}
